@@ -78,8 +78,9 @@ public class LongMapImplTest {
     public void testValues() throws Exception {
         Object [] arrValue = longMap.values();
         assertEquals(longMap.size(), arrValue.length);
+        assertFalse(arrValue[0].equals(arrValue[arrValue.length-1]));
         for (int i=0; i<arrValue.length; i++){
-            assertTrue(longMap.containsValue("str_"+i));
+            assertTrue(longMap.containsValue((String) arrValue[i]));
         }
     }
 
