@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
  */
 public class LongMapImplTest {
     LongMap<String> longMap;
-    int countPoint = 55;
+    int countPoint = 555;
 
     @Before
     public void setUpAndPutTest() throws Exception {
@@ -64,9 +64,9 @@ public class LongMapImplTest {
 
     @Test
     public void testKeys() throws Exception {
-        long [] keys = longMap.keys();
+        long [] arrKeys = longMap.keys();
 
-        assertEquals(longMap.size(), keys.length);
+        assertEquals(longMap.size(), arrKeys.length);
 
     }
 
@@ -74,6 +74,7 @@ public class LongMapImplTest {
     public void testValues() throws Exception {
         Object [] arrValue = longMap.values();
         assertEquals(longMap.size(), arrValue.length);
+        assertTrue(arrValue[1] instanceof String);
     }
 
     @Test
@@ -84,7 +85,6 @@ public class LongMapImplTest {
     @Test
     public void testClear() throws Exception {
         longMap.clear();
-        assertEquals(0, longMap.size());
-
+        assertTrue(longMap.isEmpty());
     }
 }

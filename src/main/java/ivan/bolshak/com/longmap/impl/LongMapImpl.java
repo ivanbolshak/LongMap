@@ -177,7 +177,10 @@ public class LongMapImpl<V> implements LongMap<V> {
     }
 
     public void clear(){
+        baskets = null;
+        sizeOfBasketsTable = DEFAULT_SIZE_OF_BASKETS_TABLE;
         baskets = new List[DEFAULT_SIZE_OF_BASKETS_TABLE];
+
     }
 
 //    -----------private methods------------
