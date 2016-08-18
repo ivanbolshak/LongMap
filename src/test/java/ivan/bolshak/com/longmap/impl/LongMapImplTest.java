@@ -69,8 +69,9 @@ public class LongMapImplTest {
     public void testKeys() throws Exception {
         long [] arrKeys = longMap.keys();
         assertEquals(longMap.size(), arrKeys.length);
+        assertFalse(arrKeys[0]==arrKeys[arrKeys.length-1]);
         for (int i=0; i<arrKeys.length; i++){
-            assertTrue(longMap.containsKey(i));
+            assertTrue(longMap.containsKey(arrKeys[i]));
         }
     }
 
