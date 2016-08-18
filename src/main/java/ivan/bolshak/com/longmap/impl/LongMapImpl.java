@@ -1,0 +1,239 @@
+package ivan.bolshak.com.longmap.impl;
+
+import ivan.bolshak.com.longmap.LongMap;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class LongMapImpl<V> implements LongMap<V> {
+    private int sizeOfBasketsTable;
+    private double loadBasket;
+    private List[] baskets;
+
+    private final static int DEFAULT_SIZE_OF_BASKETS_TABLE = 16;
+    private final static double DEFAULT_LOAD_BASKET = 0.75;
+
+//  -----------constructors-----------
+
+    public LongMapImpl() {
+        this(DEFAULT_SIZE_OF_BASKETS_TABLE);
+    }
+
+    public LongMapImpl(int sizeOfBasketsTable){
+       this(sizeOfBasketsTable, DEFAULT_LOAD_BASKET);
+    }
+
+    public LongMapImpl(int sizeOfBasketsTable, double loadBasket ) {
+        this.sizeOfBasketsTable = sizeOfBasketsTable;
+        this.loadBasket = loadBasket;
+        this.baskets = new List[sizeOfBasketsTable];
+    }
+
+//  -----------public methods-----------
+
+    public V put(long key, V value){
+        int basketIndex = getBasketIndexByKey(key);
+        Entity entityNew = new Entity(key, value);
+
+        if(baskets[basketIndex]==null){
+            List<Entity> entityList = new LinkedList<>();
+            entityList.add(entityNew);
+            baskets[getBasketIndexByKey(key)] = entityList;
+            return value;
+        }
+
+        List<Entity> entityList = baskets[basketIndex];
+
+        for (Entity entityTemp: entityList){
+            if (entityNew.getKey()==entityTemp.getKey()){
+                entityTemp.setValue(entityNew.getValue());
+                return value;
+            }
+        }
+
+        entityList.add(entityNew);
+        if (entityList.size()>(sizeOfBasketsTable*loadBasket)){
+            doublingBaskets();
+        }
+
+        return value;
+    }
+
+    public V get(long key){
+        int basketIndex = getBasketIndexByKey(key);
+
+        if (null == baskets[basketIndex]) {
+            return null;
+        }
+
+        List<Entity> entityList = baskets[basketIndex];
+
+        for (Entity entityTemp: entityList){
+            if (key==entityTemp.getKey()){
+                return entityTemp.getValue();
+            }
+        }
+        return null;
+    }
+
+    public V remove(long key){
+        int basketIndex = getBasketIndexByKey(key);
+
+        if (null == baskets[basketIndex]) {
+            return null;
+        }
+        List<Entity> entityList = baskets[basketIndex];
+
+        for (Entity entityTemp: entityList){
+            if (key==entityTemp.getKey()){
+                entityList.remove(entityTemp);
+                return entityTemp.getValue();
+            }
+        }
+        return null;
+    }
+
+    public boolean isEmpty(){
+       for (int i=0; i<sizeOfBasketsTable; i++){
+           if (baskets[i]!=null)
+               return false;
+       }
+        return true;
+    }
+
+    public boolean containsKey(long key){
+        int basketIndex = getBasketIndexByKey(key);
+        if (null == baskets[basketIndex]) {
+            return false;
+        }
+        List<Entity> entityList = baskets[basketIndex];
+        for (Entity entityTemp: entityList){
+            if (key==entityTemp.getKey()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean containsValue(V value){
+
+        for (int i=0; i<sizeOfBasketsTable;i++){
+            if (null!=baskets[i]){
+                List<Entity> entityList = baskets[i];
+                for (Entity entity: entityList){
+                    if (entity.getValue().equals(value)){
+                        return true;
+                    }
+                }
+            }
+        }
+
+
+        return false;
+    }
+
+    public long[] keys(){
+        int sizeArr = (int) size();
+        long []arr = new long[sizeArr];
+        int countPoint = 0;
+
+             for (int i=0; i<sizeOfBasketsTable; i++){
+                if (baskets[i]!=null){
+                    List<Entity> entityList = baskets[i];
+                    for (Entity entityTemp: entityList){
+                        arr[countPoint] = entityTemp.getKey();
+                        countPoint++;
+                    }
+                }
+            }
+
+        return arr;
+    }
+
+    public V[] values(){
+        List<V> values = new LinkedList<>();
+
+        for (List<Entity> entities: baskets ){
+            if (entities!=null) {
+                for (Entity entity : entities) {
+                    values.add(entity.getValue());
+                }
+            }
+        }
+
+        V [] result = (V[]) values.toArray();
+
+        return result;
+    }
+
+    public long size(){
+        long sizeCount = 0;
+        for (int i=0; i<sizeOfBasketsTable; i++){
+            if (baskets[i]!=null) {
+                sizeCount += (long)baskets[i].size();
+            }
+        }
+        return sizeCount;
+    }
+
+    public void clear(){
+        baskets = new List[DEFAULT_SIZE_OF_BASKETS_TABLE];
+    }
+
+//    -----------private methods------------
+
+    private void doublingBaskets(){
+        List[] basketsOld = baskets;
+        sizeOfBasketsTable = sizeOfBasketsTable*2;
+        baskets = new List[sizeOfBasketsTable];
+
+        for (List<Entity> entitiesOld: basketsOld ){
+            if (entitiesOld!=null) {
+                for (Entity entity : entitiesOld) {
+                    put(entity.getKey(), entity.getValue());
+
+                }
+            }
+        }
+
+        basketsOld = null;
+    }
+
+    private int getBasketIndexByKey(long key){
+//        return  hashCodeForKey(key)%sizeOfBasketsTable;
+     return (int)key%sizeOfBasketsTable;
+    }
+
+    private int hashCodeForKey(long key) { /*used with previos method getBasketIndexByKey() if needed use hashCode*/
+        return (int) (key ^ (key >>> 32));
+    }
+
+//    ---------------inner classes----------------
+
+    public class Entity {
+        private long key;
+        private V value;
+
+        public Entity() {
+        }
+
+        public Entity(long key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public long getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
+
+        public void setValue(V value) {
+            this.value = value;
+        }
+
+
+    }
+}
