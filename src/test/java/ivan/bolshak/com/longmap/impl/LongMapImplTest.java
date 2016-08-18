@@ -5,6 +5,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 /**
@@ -65,16 +68,20 @@ public class LongMapImplTest {
     @Test
     public void testKeys() throws Exception {
         long [] arrKeys = longMap.keys();
-
         assertEquals(longMap.size(), arrKeys.length);
-
+        for (int i=0; i<arrKeys.length; i++){
+            assertTrue(longMap.containsKey(i));
+        }
     }
 
     @Test
     public void testValues() throws Exception {
         Object [] arrValue = longMap.values();
         assertEquals(longMap.size(), arrValue.length);
-        assertTrue(arrValue[1] instanceof String);
+        assertTrue(arrValue[countPoint-1] instanceof String);
+        for (int i=0; i<arrValue.length; i++){
+            assertTrue(longMap.containsValue("str_"+i));
+        }
     }
 
     @Test
