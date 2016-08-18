@@ -15,11 +15,12 @@ import static org.junit.Assert.*;
  */
 public class LongMapImplTest {
     LongMap<String> longMap;
-    int countPoint = 555;
+    int countPoint;
 
     @Before
     public void setUpAndPutTest() throws Exception {
         longMap = new LongMapImpl<>();
+        countPoint = 555;
 
         for (int i=0; i<countPoint; i++){
             longMap.put((long) i, String.valueOf("str_"+(i)));
