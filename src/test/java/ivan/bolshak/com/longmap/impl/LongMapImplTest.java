@@ -96,4 +96,19 @@ public class LongMapImplTest {
         longMap.clear();
         assertTrue(longMap.isEmpty());
     }
+
+    @Test
+    public void testToString() throws Exception{
+        LongMap<String>longMapToString = new LongMapImpl<>();
+        int countPointToString = 3;
+
+        for (int i=0; i<countPointToString; i++){
+            longMapToString.put((long) i, String.valueOf("str_"+(i)));
+        }
+
+        String strExample = "{0=str_0, 1=str_1, 2=str_2}";
+
+        assertEquals(strExample, longMapToString.toString());
+
+    }
 }

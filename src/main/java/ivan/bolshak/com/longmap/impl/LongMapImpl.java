@@ -183,6 +183,29 @@ public class LongMapImpl<V> implements LongMap<V> {
 
     }
 
+    @Override
+    public String toString() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{");
+
+        for (int i=0; i<sizeOfBasketsTable; i++){
+            if (baskets[i]!=null){
+                List<Entity> entityList = baskets[i];
+                for (Entity entityTemp: entityList){
+                    stringBuilder.append(entityTemp.getKey()+"="+entityTemp.getValue()+", ");
+
+                }
+            }
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length()-1);
+        stringBuilder.deleteCharAt(stringBuilder.length()-1);
+        stringBuilder.append("}");
+
+
+        return stringBuilder.toString();
+    }
+
 //    -----------private methods------------
 
     private void doublingBaskets(){
