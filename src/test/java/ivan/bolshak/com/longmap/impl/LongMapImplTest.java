@@ -48,12 +48,12 @@ public class LongMapImplTest {
     @Test
     public void testIsEmptyTrue() throws Exception {
         LongMap<Integer> longMapEmpty = new LongMapImpl<>();
-        assertTrue("map Empty", true);
+        assertTrue("map Empty", longMapEmpty.isEmpty());
     }
 
     @Test
     public void testIsEmptyFalse() throws Exception {
-        assertFalse("map NotEmpty", false);
+        assertFalse("map NotEmpty",  longMap.isEmpty());
     }
 
     @Test
@@ -71,8 +71,8 @@ public class LongMapImplTest {
         long [] arrKeys = longMap.keys();
         assertEquals(longMap.size(), arrKeys.length);
         assertFalse(arrKeys[0]==arrKeys[arrKeys.length-1]);
-        for (int i=0; i<arrKeys.length; i++){
-            assertTrue(longMap.containsKey(arrKeys[i]));
+        for (long arrKey : arrKeys) {
+            assertTrue(longMap.containsKey(arrKey));
         }
     }
 
